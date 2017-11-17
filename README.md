@@ -1,14 +1,15 @@
-[![Build Status](https://travis-ci.org/karmats/gocd-monitor.svg?branch=master)](https://travis-ci.org/karmats/gocd-monitor)
-[![Dependencies](https://david-dm.org/karmats/gocd-monitor.svg)](https://david-dm.org/karmats/gocd-monitor)
-[![Code Climate](https://codeclimate.com/github/karmats/gocd-monitor/badges/gpa.svg)](https://codeclimate.com/github/karmats/gocd-monitor)
+<img src="https://github.com/karmats/gocd-monitor/blob/master/assets/images/logo.png?raw=true" width="150" align="right" />
 
-# Go cd monitor
+
+# GoCD monitor [![Build Status](https://travis-ci.org/karmats/gocd-monitor.svg?branch=master)](https://travis-ci.org/karmats/gocd-monitor) [![Dependencies](https://david-dm.org/karmats/gocd-monitor.svg)](https://david-dm.org/karmats/gocd-monitor) [![Code Climate](https://codeclimate.com/github/karmats/gocd-monitor/badges/gpa.svg)](https://codeclimate.com/github/karmats/gocd-monitor)
+
 Build monitor for Go cd build server https://www.go.cd/
 #### Pipeline status
 * Blue - Pipeline is building
 * Green - Pipeline build passed
 * Red - Pipeline has failed
 * Yellow - Pipeline has been paused
+* Orange - Pipeline build been cancelled
 
 ![Pipelines](https://github.com/karmats/gocd-monitor/blob/gh-pages/images/pipelines.png?raw=true)
 

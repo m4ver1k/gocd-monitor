@@ -29,14 +29,14 @@ const styles = {
   }
 };
 
-// Sort by latest build time or pipeline status. Status is sorted by building, failed, passed and paused
+// Sort by latest build time or pipeline status. Status is sorted by building, cancelled, failed, passed and paused
 const sortOrders = [{
   name : 'buildtime',
   label: 'Build time'
 },
 {
   name: 'status',
-  label: 'Status (building, failed, passed, paused)'
+  label: 'Status (building, failed, cancelled, passed, paused)'
 }];
 
 
@@ -210,16 +210,21 @@ export default class Main extends React.Component {
         if (aStatus === bStatus) {
           return sortByBuildTime(a, b);
         }
-        switch(aStatus) {
-          case 'building':
-            return -1;
-          case 'failed':
-            return bStatus === 'building' ? 1 : -1;
-          case 'passed':
-            return bStatus === 'building' || bStatus === 'failed' ? 1 : -1;
-          default:
-            return bStatus !== 'paused' ? 1 : -1;
+
+        let statusIndex = {
+          building: -1,
+          failed: 0,
+          cancelled: 1,
+          passed: 2,
+          paused: 3,
+          unknown: 3,
         }
+        
+        if (statusIndex[aStatus]  < statusIndex[bStatus] ){
+          return -1;
+        }
+        else
+          return 1;
       });
     }
   }
@@ -238,7 +243,7 @@ export default class Main extends React.Component {
     const settingsBtn = adminMode ? (
       <FloatingActionButton
         style={styles.fab}
-        onTouchTap={this.openSettings.bind(this)}>
+        onClick={this.openSettings.bind(this)}>
         <Settings />
       </FloatingActionButton>
     ) : null;
@@ -247,12 +252,12 @@ export default class Main extends React.Component {
       <FlatButton
         label="Cancel"
         primary={false}
-        onTouchTap={this.closeSettings.bind(this)}
+        onClick={this.closeSettings.bind(this)}
       />,
       <FlatButton
         label="Save"
         primary={true}
-        onTouchTap={this.saveSettings.bind(this, this.configurationProperties)}
+        onClick={this.saveSettings.bind(this, this.configurationProperties)}
       />
     ];
 

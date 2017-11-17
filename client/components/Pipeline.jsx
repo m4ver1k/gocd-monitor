@@ -6,7 +6,7 @@ import React from 'react';
 
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import * as Colors from 'material-ui/styles/colors';
-
+import { showBuildLabels } from '../../app-config';
 
 // Weather icon indicator
 const weatherIconStatuses = ['sunny', 'partlycloudy', 'cloudy', 'cloudy', 'pouring', 'lightning'];
@@ -28,12 +28,19 @@ const styles = {
     background: Colors.yellowA700,
     marginBottom: '1rem'
   },
+  cardCancelled: {
+    background: Colors.orangeA700,
+    marginBottom: '1rem'
+  },
   cardContainer: {
     paddingBottom: '0'
   },
   cardTitle: {
     color: '#fff',
     fontSize: '1.2em'
+  },
+  cardLabel: {
+    fontWeight: 'normal'
   },
   cardSubTitle: {
     color: '#fff',
@@ -52,7 +59,7 @@ export default class Pipeline extends React.Component {
    * Calculates which weather icon to use for a pipeline based on pipeline heath.
    * This function was a bit more advanced back in the days, with api changes it got reduced to this.
    * Let's keep it for now
-   * 
+   *
    * @param   {Object}  pipeline  The pipeline
    * @return  {string}  Pre weather icon classname
    */
@@ -62,7 +69,7 @@ export default class Pipeline extends React.Component {
 
   /**
    * Calculates icon for stage visualization.
-   * 
+   *
    * @param   {Object}  stage   Stage with name and status
    * @return  {string}  Material design icon classname
    */
@@ -81,13 +88,15 @@ export default class Pipeline extends React.Component {
 
   /**
    * Calculate what status a pipeline has
-   * 
+   *
    * @param   {Object}  pipeline  The pipeline to calculate status for
    * @return  {string}  Status paused, building, failed or passed
    */
   static status(pipeline) {
     if (pipeline.pauseinfo && pipeline.pauseinfo.paused) {
       return 'paused';
+    } else if (pipeline.stageresults.some(result => result.status === 'cancelled')) {
+      return 'cancelled';
     } else if (pipeline.stageresults.some(result => result.status === 'building')) {
       return 'building';
     } else if (pipeline.stageresults.some(result => result.status === 'failed')) {
@@ -158,14 +167,24 @@ export default class Pipeline extends React.Component {
       case 'passed':
         style = styles.cardSuccess;
         break;
+      case 'cancelled':
+        style = styles.cardCancelled;
+        break;
     }
+
+    let buildStatus = status;
+
+    if (showBuildLabels) {
+      buildStatus = <div>{status}<span style={styles.cardLabel}> : {pipeline.label}</span></div>;
+    }
+
     return (
       <Card style={style} containerStyle={styles.cardContainer}>
         <CardHeader
           className="buildtitle"
           title={pipeline.name}
           titleStyle={styles.cardTitle}
-          subtitle={status}
+          subtitle={buildStatus}
           subtitleStyle={styles.cardSubTitle}>
           <i className={'mdi-weather-' + this.weatherIcon(pipeline) + ' mdi mdi-48px buildstatus'}></i>
         </CardHeader>
