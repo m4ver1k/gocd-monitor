@@ -35,6 +35,50 @@ Go to `http://localhost:3000`
 
 Enjoy :)
 
+## DOCKER Setup
+
+`docker pull adarshkkumar/gocd-monitor`
+
+` docker run -d -p3000:3000 -e GO_URL=http://goserverhost:port -e GO_USER=user_name -e GO_PASSWORD=password  -e PORT=3000 -e POLL_INTERVAL=30 -e SWITCH_PAGE_INTERVAL=30 -e SHOW_BUILD_LABEL=false   gocd-mon:latest `
+
+
+### Build  Container from source: 
+
+Clone this repository.
+
+Add following configuration to `app-config.js` :
+
+```
+var config = {
+    
+    jsFilename : 'app.js',
+    
+    port: process.env.PORT,
+    
+    devPort: 3001,
+    
+    goServerUrl: process.env.GO_URL,
+    
+    goUser: process.env.GO_USER,
+    
+    goPassword: process.env.GO_PASSWORD,
+    
+    goPollingInterval: process.env.POLL_INTERVAL,
+    
+    switchBetweenPagesInterval: process.env.SWITCH_PAGE_INTERVAL,
+    
+    showBuildLabels: process.env.SHOW_BUILD_LABEL
+}
+module.exports = config;
+
+```
+
+from the repository directory run the following command:
+
+`docker build -t gocd-mon .`
+
+Now you will have a docker image created in your local machine with tag gocd-mon. Use the above docker run command to create a container from this image.
+
 ## Configuration
 Go to `http://localhost:3000?admin` and click the settings button in the bottom-right corner to open the configuration dialog.
 * Sort Order - Sort pipelines by status or latest build time
